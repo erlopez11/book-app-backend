@@ -3,8 +3,7 @@ const { Schema } = mongoose;
 
 const collectionSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  thumbnailUrl: { type: String },
-  description: { type: String },
+  description: { type: String, required: true },
   users: [{ type: Schema.Types.ObjectId, ref: "User" }],
   books: [{ type: Schema.Types.ObjectId, ref: "Book" }],
 });
