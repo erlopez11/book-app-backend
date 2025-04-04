@@ -1,22 +1,34 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
-const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-    },
-    hashedPassword: {
-        type: String,
-        required: true,
-    }
+const noteSchema = new Schema({
+  book: { type: Schema.Types.ObjectId, ref: "Book", required: true },
+  content: { type: String },
 });
 
-userSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
-        delete returnedObject.hashedPassword;
-    }
+const ratingSchema = new Schema({
+  book: { type: Schema.Types.ObjectId, ref: "Book", required: true },
+  rating: { type: Number, min: 0, max: 5 },
 });
 
-const User = mongoose.model('User', userSchema);
+const userSchema = new Schema({
+  username: {
+    type: String,
+    required: true,
+  },
+  hashedPassword: {
+    type: String,
+    required: true,
+  },
+  collections: [{ type: Schema.Types.ObjectId, ref: "Collection" }],
+  notes: [noteSchema],
+  ratings: [ratingSchema],
+});
 
-module.exports = User;
+userSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    delete returnedObject.hashedPassword;
+  },
+});
+
+module.exports = mongoose.model("User", userSchema);
