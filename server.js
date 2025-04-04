@@ -7,7 +7,10 @@ const logger = require('morgan');
 const testJwtRouter = require('./controllers/test-jwt');
 const authRouter = require('./controllers/auth');
 const usersRouter = require('./controllers/users');
+const booksRouter = require('./controllers/books');
+
 const verifyToken = require('./middleware/verify-token');
+
 
 
 dotenv.config();
@@ -24,6 +27,7 @@ app.use(logger('dev'));
 
 app.use('/auth', authRouter);
 app.use('/users', verifyToken, usersRouter);
+app.use('/books', booksRouter);
 app.use('/test-jwt', testJwtRouter);
 
 app.listen(3000, () => {
