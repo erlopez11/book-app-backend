@@ -11,7 +11,9 @@ router.post('/', verifyToken, async (req, res) => {
         const bookStats = currentUser.bookStats;
         bookStats.push(req.body);
         await currentUser.save();
-        res.status(201).json(bookStats); 
+
+        const newBookStat = bookStats[bookStats.length - 1];
+        res.status(201).json(newBookStat);
     } catch (error) {
         console.log(error);
         res.status(500).json({error: error.message});
