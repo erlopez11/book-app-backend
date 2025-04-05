@@ -7,7 +7,7 @@ const router = express.Router();
 //TODO: Change Url to reflect universal instead of specific book
 const API_URL='https://www.googleapis.com/books/v1/volumes/wod-BAAAQBAJ'
 
-//POST /book -CREATE New Book Info from API 
+//POST /books -CREATE New Book Info from API 
  router.post('/', verifyToken, async (req, res) => {
     try {
         const response = await fetch(API_URL);
@@ -21,16 +21,27 @@ const API_URL='https://www.googleapis.com/books/v1/volumes/wod-BAAAQBAJ'
             thumbnailUrl: data.volumeInfo.imageLinks.thumbnail,
         }
         const book = await Book.create(bookInfo);
-        res.json(book);
+        res.status(201).json(book);
     } catch (error) {
         console.log(error);
         res.status(500).json({error: error.message})
     }
 }); 
 
+//GET /books - READ Route (Book Info from API) "Protected"
+router.get('/', verifyToken, async (req, res) => {
+    try {
+        const books = await Book.find({});
+        res.status(200).json(books);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error: error.message});
+    }
+});
+
 //BOOKSTATS
 
-//POST /books - CREATE (Add new Book Stats) Route "Protected"
+//POST /books/:bookId/bookLog - CREATE (Add new Book Stats) Route "Protected"
 router.post('/:bookId/bookLog', verifyToken, async (req, res) => {
     try {
         const currentUser = await User.findById(req.user._id);
@@ -46,7 +57,7 @@ router.post('/:bookId/bookLog', verifyToken, async (req, res) => {
     }
 });
 
-//PUT /books/:bookId - UPDATE (Book Stats) Route "Protected"
+//PUT /books/:bookId/bookLog/:logItemId - UPDATE (Book Stats) Route "Protected"
 router.put('/:bookId/bookLog/:logItemId', verifyToken, async (req, res) => {
     try {
         const currentUser = await User.findById(req.user._id);
@@ -60,7 +71,7 @@ router.put('/:bookId/bookLog/:logItemId', verifyToken, async (req, res) => {
     }
 });
 
-//DELETE /books/:bookId - DELETE (Book Stats) Route "Protected"
+//DELETE /books/:bookId/bookLog/:logItemId - DELETE (Book Stats) Route "Protected"
 router.delete('/:bookId/bookLog/:logItemId', verifyToken, async (req, res) => {
     try {
         const currentUser = await User.findById(req.user._id);
