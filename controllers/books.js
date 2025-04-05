@@ -28,11 +28,22 @@ const API_URL='https://www.googleapis.com/books/v1/volumes/wod-BAAAQBAJ'
     }
 }); 
 
-//GET /books - READ Route (Book Info from API) "Protected"
+//GET /books - READ Route (Index Book Info from API) "Protected"
 router.get('/', verifyToken, async (req, res) => {
     try {
         const books = await Book.find({});
         res.status(200).json(books);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error: error.message});
+    }
+});
+
+//Get /books/:bookId - Show Route (Book from API) "Protected"
+router.get('/:bookId', verifyToken, async (req, res) => {
+    try {
+        const book = await Book.findById(req.params.bookId);
+        res.status(200).json(book);
     } catch (error) {
         console.log(error);
         res.status(500).json({error: error.message});
