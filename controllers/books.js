@@ -85,10 +85,10 @@ router.get('/:bookId/bookLog/:bookLogId', verifyToken, async (req, res) => {
 router.put('/:bookId/bookLog/:bookLogId', verifyToken, async (req, res) => {
     try {
         const currentUser = await User.findById(req.user._id);
-        const bookLog = currentUser.bookLog.id(req.params.logItemId);
+        const bookLog = currentUser.bookLog.id(req.params.bookLogId);
         bookLog.set(req.body);
         await currentUser.save();
-        res.status(200).json({message: 'Update Successful'});
+        res.status(200).json(bookLog);
     } catch (error) {
         console.log(error);
         res.status(500).json({error: error.message});
@@ -100,7 +100,7 @@ router.delete('/:bookId/bookLog/:bookLogId', verifyToken, async (req, res) => {
     try {
         const currentUser = await User.findById(req.user._id);
         const bookLog = currentUser.bookLog; 
-        bookLog.remove({_id: req.params.logItemId});
+        bookLog.remove({_id: req.params.bookLogId});
         await currentUser.save();
         res.status(200).json({message: "Delete Successful!"});
     } catch (error) {
