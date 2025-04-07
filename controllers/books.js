@@ -50,7 +50,7 @@ router.get('/:bookId', verifyToken, async (req, res) => {
     }
 });
 
-//BOOKSTATS
+//BOOKLOG
 
 //POST /books/:bookId/bookLog - CREATE (Add new Book Stats) Route "Protected"
 router.post('/:bookId/bookLog', verifyToken, async (req, res) => {
@@ -68,8 +68,21 @@ router.post('/:bookId/bookLog', verifyToken, async (req, res) => {
     }
 });
 
+//GET /books/:bookId/bookLog/:bookLogId - READ (Ind book log) "Protected"
+router.get('/:bookId/bookLog/:bookLogId', verifyToken, async (req, res) => {
+    try {
+        const currentUser = await User.findById(req.user._id);
+        const bookLogItem = currentUser.bookLog.id(req.params.bookLogId);
+        res.status(200).json(bookLogItem);
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error: error.message});
+    }
+});
+
 //PUT /books/:bookId/bookLog/:logItemId - UPDATE (Book Stats) Route "Protected"
-router.put('/:bookId/bookLog/:logItemId', verifyToken, async (req, res) => {
+router.put('/:bookId/bookLog/:bookLogId', verifyToken, async (req, res) => {
     try {
         const currentUser = await User.findById(req.user._id);
         const bookLog = currentUser.bookLog.id(req.params.logItemId);
@@ -83,7 +96,7 @@ router.put('/:bookId/bookLog/:logItemId', verifyToken, async (req, res) => {
 });
 
 //DELETE /books/:bookId/bookLog/:logItemId - DELETE (Book Stats) Route "Protected"
-router.delete('/:bookId/bookLog/:logItemId', verifyToken, async (req, res) => {
+router.delete('/:bookId/bookLog/:bookLogId', verifyToken, async (req, res) => {
     try {
         const currentUser = await User.findById(req.user._id);
         const bookLog = currentUser.bookLog; 
