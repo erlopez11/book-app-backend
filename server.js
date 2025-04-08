@@ -13,6 +13,9 @@ const verifyToken = require('./middleware/verify-token');
 
 
 dotenv.config();
+
+const port = process.env.port || '3000';
+
 const app = express();
 
 mongoose.connect(process.env.MONGODB_URI);
@@ -29,6 +32,6 @@ app.use('/users', verifyToken, usersRouter);
 app.use('/books', verifyToken, bookLogsRouter);
 
 
-app.listen(3000, () => {
+app.listen(port, () => {
     console.log('The express app is ready!');
 });
