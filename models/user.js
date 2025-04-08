@@ -1,14 +1,25 @@
 const mongoose = require("mongoose");
+const book = require("./book");
 const { Schema } = mongoose;
 
-const noteSchema = new Schema({
+const bookLogSchema = new Schema({
   book: { type: Schema.Types.ObjectId, ref: "Book", required: true },
-  content: { type: String },
-});
-
-const ratingSchema = new Schema({
-  book: { type: Schema.Types.ObjectId, ref: "Book", required: true },
-  rating: { type: Number, min: 0, max: 5 },
+  status: {
+    type: String,
+    enum: ['want to read', 'currently reading', 'read', 'did not finish'],
+  },
+  notes: {
+    type: String,
+  },
+  rating: {
+    type: String,
+    required: true,
+    enum: ['no rating', '1', '2', '3', '4', '5'],
+  },
+  collections: {
+    type: String,
+    enum: ['My Collections'],
+  }
 });
 
 const userSchema = new Schema({
@@ -21,8 +32,7 @@ const userSchema = new Schema({
     required: true,
   },
   collections: [{ type: Schema.Types.ObjectId, ref: "Collection" }],
-  notes: [noteSchema],
-  ratings: [ratingSchema],
+  bookLog: [bookLogSchema],
 });
 
 userSchema.set("toJSON", {
