@@ -3,10 +3,10 @@ const router = express.Router();
 const { URLSearchParams } = require("url");
 
 router.get("/", async (req, res) => {
-  const { startIndex, maxResults } = req.query;
+  const { startIndex, maxResults, q } = req.query;
   try {
     const params = new URLSearchParams();
-    params.append("q", "award winning");
+    params.append("q", q);
     params.append("maxResults", Number(maxResults));
     params.append("orderBy", "newest");
     params.append("key", process.env.GOOGLE_BOOKS_KEY);
