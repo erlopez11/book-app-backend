@@ -32,7 +32,7 @@ app.use('/auth', authRouter);
 app.use('/users', verifyToken, usersRouter);
 app.use("/books", verifyToken, booksRouter);
 app.use('/books', verifyToken, bookLogsRouter);
-app.use('collections', verifyToken, collectionsRouter);
+app.use('/collections', verifyToken, collectionsRouter);
 
 
 app.listen(port, () => {
