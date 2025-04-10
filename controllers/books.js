@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
     const json = await apiResponse.json();
     res.json(
       json.items?.map(({ id, volumeInfo }) => ({
-        isbn: id,
+        id,
         title: volumeInfo.title,
         author: volumeInfo.authors?.[0] ?? "N/A",
         thumbnailUrl: volumeInfo.imageLinks?.thumbnail,
