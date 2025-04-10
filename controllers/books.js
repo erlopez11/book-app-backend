@@ -16,14 +16,14 @@ router.get("/", async (req, res) => {
     );
     const json = await apiResponse.json();
     res.json(
-      json.items.map(({ id, volumeInfo }) => ({
+      json.items?.map(({ id, volumeInfo }) => ({
         isbn: id,
         title: volumeInfo.title,
         author: volumeInfo.authors?.[0] ?? "N/A",
         thumbnailUrl: volumeInfo.imageLinks?.thumbnail,
         description: volumeInfo.description,
         numberOfPages: volumeInfo.pageCount,
-      }))
+      })) ?? []
     );
   } catch (error) {
     console.error(error);
