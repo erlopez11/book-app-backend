@@ -34,8 +34,10 @@ router.get("/", async (req, res) => {
 router.get("/:bookId", async (req, res) => {
   const { bookId } = req.params;
   try {
+    const params = new URLSearchParams();
+    params.append("key", process.env.GOOGLE_BOOKS_KEY);
     const apiResponse = await fetch(
-      `https://www.googleapis.com/books/v1/volumes/${bookId}`
+      `https://www.googleapis.com/books/v1/volumes/${bookId}?${params.toString()}`
     );
     const googleBook = await apiResponse.json();
     console.log(googleBook);
