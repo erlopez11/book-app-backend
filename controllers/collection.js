@@ -2,6 +2,19 @@ const express = require('express');
 const Collection = require('../models/collection');
 const router = express.Router();
 
+// Get all collections for the current user (GET)
+router.get('/', async (req, res) => {
+    try {
+        const collections = await Collection.find({ users: req.user._id })
+            .populate('books');
+        
+        res.status(200).json(collections);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error: error.message});
+    }
+});
+
 // Create a new collection (POST)
 router.post('/', async (req, res) => {
     try {
