@@ -3,7 +3,9 @@ const book = require("./book");
 const { Schema } = mongoose;
 
 const bookLogSchema = new Schema({
-  book: { type: Schema.Types.ObjectId, ref: "Book", required: true },
+  book: { type: String },
+  author: {type: String},
+  thumbnailUrl: {type: String},
   status: {
     type: String,
     enum: ['want to read', 'currently reading', 'read', 'did not finish'],
@@ -18,7 +20,6 @@ const bookLogSchema = new Schema({
   },
   collections: {
     type: String,
-    enum: ['My Collections'],
   }
 });
 
