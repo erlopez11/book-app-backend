@@ -7,6 +7,7 @@ const logger = require('morgan');
 const authRouter = require('./controllers/auth');
 const usersRouter = require('./controllers/users');
 const bookLogsRouter = require('./controllers/bookLogs');
+const collectionsRouter = require('./controllers/collection'); 
 
 const verifyToken = require('./middleware/verify-token');
 
@@ -30,6 +31,7 @@ app.use(logger('dev'));
 app.use('/auth', authRouter);
 app.use('/users', verifyToken, usersRouter);
 app.use('/books', verifyToken, bookLogsRouter);
+app.use('/collections', verifyToken, collectionsRouter);
 
 
 app.listen(port, () => {
