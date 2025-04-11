@@ -33,7 +33,7 @@ const userSchema = new Schema({
     required: true,
   },
   collections: [{ type: Schema.Types.ObjectId, ref: "Collection" }],
-  // bookLog: [bookLogSchema],
+  bookLog: [bookLogSchema],
 });
 
 userSchema.set("toJSON", {
