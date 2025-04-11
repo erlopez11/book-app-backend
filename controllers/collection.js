@@ -254,4 +254,52 @@ router.post("/:collectionId/books/:bookId", async (req, res) => {
   }
 });
 
+// Remove a book from a collection (DELETE)
+router.delete("/:collectionId/books/:bookId", async (req, res) => {
+  try {
+    const { collectionId, bookId } = req.params;
+
+    // Find the collection
+    const collection = await Collection.findById(collectionId);
+    if (!collection) {
+      return res.status(404).json({ error: "Collection not found" });
+    }
+
+    // Check user access
+    if (
+      !collection.users.some(
+        (user) => user._id.toString() === req.user._id.toString()
+      )
+    ) {
+      return res
+        .status(403)
+        .json({ error: "You do not have access to this collection" });
+    }
+
+    // Find the book in DB using googleId or _id
+    const book =
+      (await Book.findOne({ googleId: bookId })) ||
+      (await Book.findById(bookId));
+    if (!book) {
+      return res.status(404).json({ error: "Book not found" });
+    }
+
+    // Remove the book from the collection's books array
+    collection.books = collection.books.filter(
+      (b) => b.toString() !== book._id.toString()
+    );
+
+    await collection.save();
+
+    // Return the updated collection
+    const updatedCollection = await Collection.findById(collectionId).populate(
+      "books"
+    );
+    res.status(200).json(updatedCollection);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 module.exports = router;
