@@ -13,6 +13,7 @@ const parseGoogleBook = ({ id, volumeInfo }) => ({
 
 router.get("/", async (req, res) => {
   const { startIndex, maxResults, q } = req.query;
+  console.log(`Fetching books with query: ${q}, startIndex: ${startIndex}, maxResults: ${maxResults}`);
   try {
     const params = new URLSearchParams();
     params.append("q", q);
@@ -20,11 +21,29 @@ router.get("/", async (req, res) => {
     params.append("orderBy", "newest");
     params.append("key", process.env.GOOGLE_BOOKS_KEY);
     params.append("startIndex", Number(startIndex));
-    const apiResponse = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?${params.toString()}`
-    );
+    
+    const apiUrl = `https://www.googleapis.com/books/v1/volumes?${params.toString()}`;
+    console.log(`Fetching from Google Books API: ${apiUrl}`);
+    
+    const apiResponse = await fetch(apiUrl);
+    
+    if (!apiResponse.ok) {
+      console.error(`Google Books API error: ${apiResponse.status} ${apiResponse.statusText}`);
+      return res.status(apiResponse.status).json({ error: `Google Books API error: ${apiResponse.statusText}` });
+    }
+    
     const json = await apiResponse.json();
-    res.json(json.items?.map(parseGoogleBook) ?? []);
+    console.log(`Received ${json.items?.length || 0} books from Google Books API`);
+    
+    const parsedBooks = json.items?.map(parseGoogleBook) ?? [];
+    console.log(`Parsed ${parsedBooks.length} books`);
+    
+    // Log the IDs of the first few books
+    if (parsedBooks.length > 0) {
+      console.log(`First few book IDs: ${parsedBooks.slice(0, 3).map(book => book.id).join(', ')}`);
+    }
+    
+    res.json(parsedBooks);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
@@ -33,15 +52,27 @@ router.get("/", async (req, res) => {
 
 router.get("/:bookId", async (req, res) => {
   const { bookId } = req.params;
+  console.log(`Fetching book with ID: ${bookId}`);
   try {
     const params = new URLSearchParams();
     params.append("key", process.env.GOOGLE_BOOKS_KEY);
-    const apiResponse = await fetch(
-      `https://www.googleapis.com/books/v1/volumes/${bookId}?${params.toString()}`
-    );
+    const apiUrl = `https://www.googleapis.com/books/v1/volumes/${bookId}?${params.toString()}`;
+    console.log(`Fetching from Google Books API: ${apiUrl}`);
+    
+    const apiResponse = await fetch(apiUrl);
+    
+    if (!apiResponse.ok) {
+      console.error(`Google Books API error: ${apiResponse.status} ${apiResponse.statusText}`);
+      return res.status(apiResponse.status).json({ error: `Google Books API error: ${apiResponse.statusText}` });
+    }
+    
     const googleBook = await apiResponse.json();
-    console.log(googleBook);
-    res.json(parseGoogleBook(googleBook));
+    console.log(`Received book from Google Books API: ${googleBook.id} - ${googleBook.volumeInfo?.title}`);
+    
+    const parsedBook = parseGoogleBook(googleBook);
+    console.log(`Parsed book: ${JSON.stringify(parsedBook)}`);
+    
+    res.json(parsedBook);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });

@@ -4,11 +4,11 @@ const { Schema } = mongoose;
 
 const bookLogSchema = new Schema({
   book: { type: String },
-  author: {type: String},
-  thumbnailUrl: {type: String},
+  author: { type: String },
+  thumbnailUrl: { type: String },
   status: {
     type: String,
-    enum: ['want to read', 'currently reading', 'read', 'did not finish'],
+    enum: ["want to read", "currently reading", "read", "did not finish"],
   },
   notes: {
     type: String,
@@ -16,11 +16,11 @@ const bookLogSchema = new Schema({
   rating: {
     type: String,
     required: true,
-    enum: ['no rating', '1', '2', '3', '4', '5'],
+    enum: ["no rating", "1", "2", "3", "4", "5"],
   },
   collections: {
     type: String,
-  }
+  },
 });
 
 const userSchema = new Schema({
