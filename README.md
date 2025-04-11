@@ -6,6 +6,12 @@ This is the backend for the Bookly App, an app that helps users keep track of th
 
 [Bookly FrontEnd Repository](https://github.com/erlopez11/book-app-frontend)
 
+**The Team**
+
+* Frontend: Quan Nguyen
+* Backend: Trisha Pai
+* Github Manager: Elainy Lopez
+
 **Tech Used:** MERN Stack
 
 This back end contains the CRUD functionaly for:
